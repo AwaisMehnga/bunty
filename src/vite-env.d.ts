@@ -1,6 +1,9 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
+  readonly VITE_LLM_MODEL?: string
+  readonly VITE_LLM_BASE_URL?: string
+  /** @deprecated Prefer VITE_LLM_MODEL */
   readonly VITE_OPENAI_MODEL?: string
 }
 

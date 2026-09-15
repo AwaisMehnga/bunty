@@ -10,28 +10,19 @@ const rootDir = path.dirname(fileURLToPath(import.meta.url))
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, rootDir, '')
-  const apiKey = env.OPENAI_API_KEY ?? ''
+  const llmApiKey = env.LLM_API_KEY || env.OPENAI_API_KEY || ''
+  const llmBaseUrl = env.LLM_BASE_URL || 'https://api.openai.com/v1'
 
   return {
-    plugins: [react(), tailwindcss(), agentApiPlugin()],
+    plugins: [
+      react(),
+      tailwindcss(),
+      // PORT: dynamic OpenAI-compatible forwarder; key stays server-side unless UI overrides
+      agentApiPlugin({ llmApiKey, llmBaseUrl }),
+    ],
     server: {
       port: 8002,
       host: true,
-      proxy: {
-        // PORT: keep OPENAI_API_KEY server-side; browser calls /api/openai only
-        '/api/openai': {
-          target: 'https://api.openai.com',
-          changeOrigin: true,
-          rewrite: (p) => p.replace(/^\/api\/openai/, '/v1'),
-          configure: (proxy) => {
-            proxy.on('proxyReq', (proxyReq) => {
-              if (apiKey) {
-                proxyReq.setHeader('Authorization', `Bearer ${apiKey}`)
-              }
-            })
-          },
-        },
-      },
     },
   }
 })

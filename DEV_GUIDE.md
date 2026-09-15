@@ -108,4 +108,13 @@ Do **not** port:
 
 ## LLM boundary
 
-LLM calls leave the browser via Vite `/api/openai`. Web tools use `/api/fetch` and `/api/search` proxies (CORS). All workspace reads/edits stay in the VirtualFS (optionally synced via File System Access).
+Any **OpenAI-compatible** endpoint (DeepSeek, OpenAI, OpenRouter, Ollama, LiteLLM, custom proxies):
+
+1. Browser always calls Vite `/api/llm` (alias `/api/openai` still works).
+2. Vite forwards to `X-LLM-Base-URL` (from UI / `VITE_LLM_BASE_URL`) or server `LLM_BASE_URL`, default `https://api.openai.com/v1`.
+3. Auth: UI API key if set; else server `LLM_API_KEY` / `OPENAI_API_KEY`.
+4. Model: UI → `VITE_LLM_MODEL` / `VITE_OPENAI_MODEL` → `gpt-4o-mini`.
+
+In-app **LLM** panel overrides are stored in `localStorage` (`react-agent-llm`). See `.env.example`.
+
+Web tools use `/api/fetch` and `/api/search` proxies (CORS). All workspace reads/edits stay in the VirtualFS (optionally synced via File System Access).

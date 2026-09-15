@@ -10,8 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ai-sdk/openai-compatible": "^3.0.48",
     "@modelcontextprotocol/sdk": "^1.30.0",
-    "@ai-sdk/openai": "^4.0.66",
     "@tailwindcss/vite": "^4.3.3",
     "ai": "^7.0.101",
     "diff": "^9.0.0",
